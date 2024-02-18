@@ -1,43 +1,39 @@
-/* eslint-disable */
 import "bootstrap";
 import "./style.css";
 
-import "./assets/img/rigo-baby.jpg";
-import "./assets/img/4geeks.ico";
+let pronoun = ["the", "our"];
+let adj = ["great", "big"];
+let noun = ["jogger", "racoon"];
+let extension = [".com", ".net", ".org", ".edu", ".info", ".biz"];
 
-window.onload = function() {
-  document.querySelector("#btn-domain").addEventListener("click", () => {
-    const domainsList = generateDomains();
-    const domainsListHTML = domainsList
-      .map(domainName => `<li>${domainName}</li>`)
-      .join("");
-
-    document.querySelector(
-      "#domains-generated"
-    ).innerHTML = `<ul>${domainsListHTML}</ul>`;
-  });
-};
-
-function generateDomains() {
-  let pronouns = ["the", "my", "your"];
-  let adjectives = ["big", "awesome", ""];
-  let nouns = ["rodeo", "club", "restaurant"];
-  let domains = [".com", ".net", ".es"];
-  let domainsGenerated = [];
-
-  for (let pronoun = 0; pronoun < pronouns.length; pronoun++) {
-    for (let adjective = 0; adjective < adjectives.length; adjective++) {
-      for (let noun = 0; noun < nouns.length; noun++) {
-        for (let domain = 0; domain < domains.length; domain++) {
-          let domainName =
-            pronouns[pronoun] +
-            adjectives[adjective] +
-            nouns[noun] +
-            domains[domain];
-          domainsGenerated.push(domainName);
+function generatorDomainName(pronoun, adj, noun, extension) {
+  let domain = {};
+  for (let i = 0; i < pronoun.length; i++) {
+    for (let j = 0; j < adj.length; j++) {
+      for (let k = 0; k < noun.length; k++) {
+        for (let l = 0; l < extension.length; l++) {
+          let domainName = pronoun[i] + adj[j] + noun[k] + extension[l];
+          if (!domain[extension[l]]) {
+            domain[extension[l]] = [];
+          }
+          domain[extension[l]].push(domainName);
         }
       }
     }
   }
-  return domainsGenerated;
+  return domain;
 }
+
+window.onload = () => {
+  let domainObject = generatorDomainName(pronoun, adj, noun, extension);
+  let domainString = "";
+
+  for (let ext in domainObject) {
+    domainString += `<h4>${ext}</h4>`;
+    domainObject[ext].forEach(domain => {
+      domainString += `<p>${domain}</p>`;
+    });
+  }
+
+  document.querySelector("#domain").innerHTML = domainString;
+};
